@@ -5,6 +5,10 @@ public class Main {
 
         System.out.println("Hello and welcome!");
         System.out.println("THis is my second line");
+        System.out.println("This is my third line");
+        System.out.println("THis is my fourth line");
+
+
 
     }
 }
