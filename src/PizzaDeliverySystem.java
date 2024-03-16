@@ -61,7 +61,7 @@ class Menu {
             Pizza pizza = pizzas.get(id);
             System.out.println(id + ". " + pizza.getName() + " - $" + pizza.getPrice());
         }
-        System.out.println("\nSide Dishes:");
+        System.out.println("Do the following:");
         for (int id : sideDishes.keySet()) {
             SideDish sideDish = sideDishes.get(id);
             System.out.println(id + ". " + sideDish.getName() + " - $" + sideDish.getPrice());
