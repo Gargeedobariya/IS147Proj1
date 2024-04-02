@@ -198,17 +198,43 @@ public class PizzaDeliverySystem {
                 System.out.println("Invalid pizza ID.");
             }
 
-            System.out.print("Do you want to add anything else? (Y/N): ");
-            String addAnother = scanner.next();
-            if (addAnother.equalsIgnoreCase("Y")) {
-                order.setAddAnotherPizza(true);
-            } else {
-                order.setAddAnotherPizza(false);
-            }
+            String addAnother;
+            do {
+                System.out.print("Do you want to add anything else? (Y/N): ");
+                addAnother = scanner.next();
+                if (addAnother.equalsIgnoreCase("Y")) {
+                    order.setAddAnotherPizza(true);
+                    break;
+                } else if (addAnother.equalsIgnoreCase("N")) {
+                    order.setAddAnotherPizza(false);
+                    break;
+                } else {
+                    System.out.println("Error: Wrong input. Please enter Y or N.");
+                }
+            } while (true);
+
         } while (order.isAddAnotherPizza());
 
-        System.out.print("Pay online? (Y/N): ");
-        String payOption = scanner.next();
+        String payOption;
+        do {
+            System.out.print("Pay online? (Y/N): ");
+            payOption = scanner.next();
+            if (payOption.equalsIgnoreCase("Y")) {
+                order.setPayOnline(true);
+                System.out.print("Select payment method (Debit Card/Google Pay): ");
+                String paymentMethod = scanner.next();
+                order.setPaymentMethod(paymentMethod);
+                System.out.println("Payment will be processed online via " + paymentMethod + ".");
+                break;
+            } else if (payOption.equalsIgnoreCase("N")) {
+                order.setPayOnline(false);
+                System.out.println("Please pay in person upon delivery.");
+                break;
+            } else {
+                System.out.println("Error: Wrong input. Please enter Y or N.");
+            }
+        } while (true);
+
         if (payOption.equalsIgnoreCase("Y")) {
             order.setPayOnline(true);
             System.out.print("Select payment method (Debit Card/Google Pay): ");
