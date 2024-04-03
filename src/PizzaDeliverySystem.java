@@ -235,16 +235,7 @@ public class PizzaDeliverySystem {
             }
         } while (true);
 
-        if (payOption.equalsIgnoreCase("Y")) {
-            order.setPayOnline(true);
-            System.out.print("Select payment method (Debit Card/Google Pay): ");
-            String paymentMethod = scanner.next();
-            order.setPaymentMethod(paymentMethod);
-            System.out.println("Payment will be processed online via " + paymentMethod + ".");
-        } else {
-            order.setPayOnline(false);
-            System.out.println("Please pay in person upon delivery.");
-        }
+        
 
         double totalAmount = order.getPizzas().stream().mapToDouble(Pizza::getPrice).sum();
         totalAmount += order.getSideDishes().stream().mapToDouble(SideDish::getPrice).sum();
