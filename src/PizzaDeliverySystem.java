@@ -180,8 +180,16 @@ public class PizzaDeliverySystem {
         String name = scanner.nextLine();
         System.out.print("Enter your address: ");
         String address = scanner.nextLine();
-        System.out.print("Enter your phone number: ");
-        String phone = scanner.nextLine();
+        String phone;
+        do {
+            System.out.print("Enter your phone number: ");
+            phone = scanner.nextLine();
+            if (!phone.matches("\\d+")) {
+                System.out.println("Invalid input. Please enter numbers only for the phone number.");
+            } else {
+                break;
+            }
+        } while (true);
 
         Customer customer = new Customer(name, address, phone);
         Order order = new Order(customer);
