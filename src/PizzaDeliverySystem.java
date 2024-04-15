@@ -237,10 +237,19 @@ public class PizzaDeliverySystem {
             payOption = scanner.next();
             if (payOption.equalsIgnoreCase("Y")) {
                 order.setPayOnline(true);
-                System.out.print("Select payment method (Debit Card/Google Pay): ");
-                String paymentMethod = scanner.next();
-                order.setPaymentMethod(paymentMethod);
-                System.out.println("Payment will be processed online via " + paymentMethod + ".");
+                while (true) {
+                    System.out.print("Select payment method (D for Debit Card/G for Google Pay): ");
+                    String paymentMethod = scanner.next().toUpperCase(); // Convert to uppercase for case-insensitive comparison
+                    if (paymentMethod.equals("D")) {
+                        System.out.println("Payment will be processed online via Debit Card.");
+                        break;
+                    } else if (paymentMethod.equals("G")) {
+                        System.out.println("Payment will be processed online via Google Pay.");
+                        break;
+                    } else {
+                        System.out.println("Error: Wrong input. Please enter D or G.");
+                }
+            }
                 break;
             } else if (payOption.equalsIgnoreCase("N")) {
                 order.setPayOnline(false);
