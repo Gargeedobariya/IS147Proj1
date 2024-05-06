@@ -269,7 +269,6 @@ public class PizzaDeliverySystem {
         System.out.println("Thank you for your order!");
         System.out.println("Delivery Address: " + customer.getAddress());
         System.out.println("Contact Number: " + customer.getPhone());
-        System.out.println("Payment Method: " + (order.isPayOnline() ? order.getPaymentMethod() : "In Person"));
         for (Pizza pizza : order.getPizzas()) {
         }
     }
