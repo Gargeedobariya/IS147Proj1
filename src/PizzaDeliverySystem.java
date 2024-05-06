@@ -177,11 +177,27 @@ public class PizzaDeliverySystem {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter your name: ");
-        String name = scanner.nextLine();
+        String name;
+        while (true) {
+            name = scanner.nextLine();
+            if (name.matches(".*[a-zA-Z].*") && name.matches("[a-zA-Z0-9 ]+")) {
+                break;
+            } else {
+                System.out.println("Invalid input. Please enter at least one letter along with numbers");
+            }
+        }
         System.out.print("Enter your address: ");
         String address = scanner.nextLine();
-        System.out.print("Enter your phone number: ");
-        String phone = scanner.nextLine();
+        String phone;
+        do {
+            System.out.print("Enter your phone number: ");
+            phone = scanner.nextLine();
+            if (!phone.matches("\\d+")) {
+                System.out.println("Invalid input. Please enter numbers only for the phone number.");
+            } else {
+                break;
+            }
+        } while (true);
 
         Customer customer = new Customer(name, address, phone);
         Order order = new Order(customer);
@@ -221,10 +237,19 @@ public class PizzaDeliverySystem {
             payOption = scanner.next();
             if (payOption.equalsIgnoreCase("Y")) {
                 order.setPayOnline(true);
-                System.out.print("Select payment method (Debit Card/Google Pay): ");
-                String paymentMethod = scanner.next();
-                order.setPaymentMethod(paymentMethod);
-                System.out.println("Payment will be processed online via " + paymentMethod + ".");
+                while (true) {
+                    System.out.print("Select payment method (D for Debit Card/G for Google Pay): ");
+                    String paymentMethod = scanner.next().toUpperCase(); // Convert to uppercase for case-insensitive comparison
+                    if (paymentMethod.equals("D")) {
+                        System.out.println("Payment will be processed online via Debit Card.");
+                        break;
+                    } else if (paymentMethod.equals("G")) {
+                        System.out.println("Payment will be processed online via Google Pay.");
+                        break;
+                    } else {
+                        System.out.println("Error: Wrong input. Please enter D or G.");
+                }
+            }
                 break;
             } else if (payOption.equalsIgnoreCase("N")) {
                 order.setPayOnline(false);
@@ -235,16 +260,7 @@ public class PizzaDeliverySystem {
             }
         } while (true);
 
-        if (payOption.equalsIgnoreCase("Y")) {
-            order.setPayOnline(true);
-            System.out.print("Select payment method (Debit Card/Google Pay): ");
-            String paymentMethod = scanner.next();
-            order.setPaymentMethod(paymentMethod);
-            System.out.println("Payment will be processed online via " + paymentMethod + ".");
-        } else {
-            order.setPayOnline(false);
-            System.out.println("Please pay in person upon delivery.");
-        }
+        
 
         double totalAmount = order.getPizzas().stream().mapToDouble(Pizza::getPrice).sum();
         totalAmount += order.getSideDishes().stream().mapToDouble(SideDish::getPrice).sum();
