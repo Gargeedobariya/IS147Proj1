@@ -226,13 +226,13 @@ public class PizzaDeliverySystem {
         } while (order.isAddAnotherPizza());
 
         String payOption;
+        boolean validInput = false;
         do {
             System.out.print("Pay online? (Y/N): ");
             payOption = scanner.next();
             if (payOption.equalsIgnoreCase("Y")) {
                 order.setPayOnline(true);
-                boolean validInput = false;
-                while (!validInput) {
+                //while (validInput) {
                     System.out.print("Select payment method (D for Debit Card/G for Google Pay): ");
                     String paymentMethod = scanner.next().toUpperCase(); // Convert to uppercase for case-insensitive comparison
                     int asciiValue = (int) paymentMethod.charAt(0); // Convert first character to ASCII
@@ -250,7 +250,7 @@ public class PizzaDeliverySystem {
                             System.out.println("Error: Wrong input. Please enter D or G.");
                             break;
                     }
-                }
+                    //}
             } else if (payOption.equalsIgnoreCase("N")) {
                 order.setPayOnline(false);
                 System.out.println("Please pay in person upon delivery.");
@@ -258,13 +258,11 @@ public class PizzaDeliverySystem {
             } else {
                 System.out.println("Error: Wrong input. Please enter Y or N.");
             }
-        } while (true);
+        } while (!validInput);
 
-        
 
         double totalAmount = order.getItems().stream().mapToDouble(MenuItem::getPrice).sum();
         System.out.println("Total Amount: $" + totalAmount);
-
         System.out.println("Thank you for your order!");
         System.out.println("Delivery Address: " + customer.getAddress());
         System.out.println("Contact Number: " + customer.getPhone());
