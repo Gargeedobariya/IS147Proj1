@@ -2,11 +2,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-class Pizza {
-    private String name;
-    private double price;
+class MenuItem {
+    protected String name;
+    protected double price;
 
-    public Pizza(String name, double price) {
+    public MenuItem(String name, double price) {
         this.name = name;
         this.price = price;
     }
@@ -17,65 +17,65 @@ class Pizza {
 
     public double getPrice() {
         return price;
+    }
+
+    public String confirmationMessage() {
+        return "Item added to your order";
     }
 }
 
-class SideDish {
-    private String name;
-    private double price;
-
+class SideDish extends MenuItem {
     public SideDish(String name, double price) {
-        this.name = name;
-        this.price = price;
+        super(name, price);
     }
 
-    public String getName() {
-        return name;
+    public String confirmationMessage() {
+        return "Side Dish added to your order";
+    }
+}
+
+class Pizza extends MenuItem {
+    public Pizza(String name, double price) {
+        super(name, price);
     }
 
-    public double getPrice() {
-        return price;
+    public String confirmationMessage() {
+        return "Pizza added to your order";
     }
 }
 
 class Menu {
-    private HashMap<Integer, Pizza> pizzas;
-    private HashMap<Integer, SideDish> sideDishes;
+    private HashMap<Integer, MenuItem> menuItems;
 
     public Menu() {
-        pizzas = new HashMap<>();
-        sideDishes = new HashMap<>();
+        menuItems = new HashMap<>();
     }
 
-    public void addPizza(int id, Pizza pizza) {
-        pizzas.put(id, pizza);
-    }
-
-    public void addSideDish(int id, SideDish sideDish) {
-        sideDishes.put(id, sideDish);
+    public void addMenuItem(int id, MenuItem menuItem) {
+        menuItems.put(id, menuItem);
     }
 
     public void displayMenu() {
         System.out.println("Pizza Menu:");
-        for (int id : pizzas.keySet()) {
-            Pizza pizza = pizzas.get(id);
-            System.out.println(id + ". " + pizza.getName() + " - $" + pizza.getPrice());
+        for (HashMap.Entry<Integer, MenuItem> entry : menuItems.entrySet()) {
+            if (entry.getValue() instanceof Pizza) {
+                System.out.println(entry.getKey() + ". " + entry.getValue().getName() + " - $" + entry.getValue().getPrice());
+            }
         }
-        System.out.println("Do the following:");
-        for (int id : sideDishes.keySet()) {
-            SideDish sideDish = sideDishes.get(id);
-            System.out.println(id + ". " + sideDish.getName() + " - $" + sideDish.getPrice());
+
+        System.out.println("Side Dish Menu:");
+        for (HashMap.Entry<Integer, MenuItem> entry : menuItems.entrySet()) {
+            if (entry.getValue() instanceof SideDish) {
+                System.out.println(entry.getKey() + ". " + entry.getValue().getName() + " - $" + entry.getValue().getPrice());
+            }
         }
     }
 
-    public Pizza getPizzaById(int id) {
-        return pizzas.get(id);
-    }
-
-    public SideDish getSideDishById(int id) {
-        return sideDishes.get(id);
+    public MenuItem getMenuItemById(int id) {
+        return menuItems.get(id);
     }
 }
+
 
 class Customer {
     private String name;
@@ -103,7 +103,7 @@ class Customer {
 
 class Order {
     private Customer customer;
-    private ArrayList<Pizza> pizzas;
+    private ArrayList<MenuItem> pizzas;
     private ArrayList<SideDish> sideDishes;
     private boolean payOnline;
     private String paymentMethod;
@@ -116,12 +116,8 @@ class Order {
         addAnotherPizza = false;
     }
 
-    public void addPizza(Pizza pizza) {
-        pizzas.add(pizza);
-    }
-
-    public void addSideDish(SideDish sideDish) {
-        sideDishes.add(sideDish);
+    public void addItem(MenuItem item) {
+        pizzas.add(item);
     }
 
     public void setPayOnline(boolean payOnline) {
@@ -152,27 +148,24 @@ class Order {
         return customer;
     }
 
-    public ArrayList<Pizza> getPizzas() {
+    public ArrayList<MenuItem> getItems() {
         return pizzas;
     }
 
-    public ArrayList<SideDish> getSideDishes() {
-        return sideDishes;
-    }
 }
 
 public class PizzaDeliverySystem {
     public static void main(String[] args) {
         Menu menu = new Menu();
-        menu.addPizza(1, new Pizza("Margherita", 8.99));
-        menu.addPizza(2, new Pizza("Pepperoni", 9.99));
-        menu.addPizza(3, new Pizza("Vegetarian", 10.99));
-        menu.addPizza(4, new Pizza("Chicken", 11.99));
-        menu.addPizza(5, new Pizza("Chicago Style", 12.99));
+        menu.addMenuItem(1, new Pizza("Margherita", 8.99));
+        menu.addMenuItem(2, new Pizza("Pepperoni", 9.99));
+        menu.addMenuItem(3, new Pizza("Vegetarian", 10.99));
+        menu.addMenuItem(4, new Pizza("Chicken", 11.99));
+        menu.addMenuItem(5, new Pizza("Chicago Style", 12.99));
 
-        menu.addPizza(6, new Pizza("Garlic Bread", 3.99));
-        menu.addPizza(7, new Pizza("French Fries", 2.99));
-        menu.addPizza(8, new Pizza("Salad", 4.49));
+        menu.addMenuItem(6, new SideDish("Garlic Bread", 3.99));
+        menu.addMenuItem(7, new SideDish("French Fries", 2.99));
+        menu.addMenuItem(8, new SideDish("Salad", 4.49));
 
         Scanner scanner = new Scanner(System.in);
 
@@ -206,10 +199,10 @@ public class PizzaDeliverySystem {
             menu.displayMenu();
             System.out.print("Select Something (enter ID): ");
             int pizzaId = scanner.nextInt();
-            Pizza selectedPizza = menu.getPizzaById(pizzaId);
-            if (selectedPizza != null) {
-                order.addPizza(selectedPizza);
-                System.out.println("Item added to your order.");
+            MenuItem selectedItem = menu.getMenuItemById(pizzaId);
+            if (selectedItem != null) {
+                order.addItem(selectedItem);
+                System.out.println(selectedItem.confirmationMessage());
             } else {
                 System.out.println("Invalid pizza ID.");
             }
@@ -218,6 +211,7 @@ public class PizzaDeliverySystem {
             do {
                 System.out.print("Do you want to add anything else? (Y/N): ");
                 addAnother = scanner.next();
+
                 if (addAnother.equalsIgnoreCase("Y")) {
                     order.setAddAnotherPizza(true);
                     break;
@@ -237,20 +231,26 @@ public class PizzaDeliverySystem {
             payOption = scanner.next();
             if (payOption.equalsIgnoreCase("Y")) {
                 order.setPayOnline(true);
-                while (true) {
+                boolean validInput = false;
+                while (!validInput) {
                     System.out.print("Select payment method (D for Debit Card/G for Google Pay): ");
                     String paymentMethod = scanner.next().toUpperCase(); // Convert to uppercase for case-insensitive comparison
-                    if (paymentMethod.equals("D")) {
-                        System.out.println("Payment will be processed online via Debit Card.");
-                        break;
-                    } else if (paymentMethod.equals("G")) {
-                        System.out.println("Payment will be processed online via Google Pay.");
-                        break;
-                    } else {
-                        System.out.println("Error: Wrong input. Please enter D or G.");
+                    int asciiValue = (int) paymentMethod.charAt(0); // Convert first character to ASCII
+
+                    switch (asciiValue) {
+                        case 68: // ASCII value for 'D'
+                            System.out.println("Payment will be processed online via Debit Card.");
+                            validInput = true;
+                            break;
+                        case 71: // ASCII value for 'G'
+                            System.out.println("Payment will be processed online via Google Pay.");
+                            validInput = true;
+                            break;
+                        default:
+                            System.out.println("Error: Wrong input. Please enter D or G.");
+                            break;
+                    }
                 }
-            }
-                break;
             } else if (payOption.equalsIgnoreCase("N")) {
                 order.setPayOnline(false);
                 System.out.println("Please pay in person upon delivery.");
@@ -262,14 +262,13 @@ public class PizzaDeliverySystem {
 
         
 
-        double totalAmount = order.getPizzas().stream().mapToDouble(Pizza::getPrice).sum();
-        totalAmount += order.getSideDishes().stream().mapToDouble(SideDish::getPrice).sum();
+        double totalAmount = order.getItems().stream().mapToDouble(MenuItem::getPrice).sum();
         System.out.println("Total Amount: $" + totalAmount);
 
         System.out.println("Thank you for your order!");
         System.out.println("Delivery Address: " + customer.getAddress());
         System.out.println("Contact Number: " + customer.getPhone());
-        for (Pizza pizza : order.getPizzas()) {
+        for (MenuItem pizza : order.getItems()) {
         }
     }
 }
