@@ -232,7 +232,6 @@ public class PizzaDeliverySystem {
             payOption = scanner.next();
             if (payOption.equalsIgnoreCase("Y")) {
                 order.setPayOnline(true);
-                //while (validInput) {
                     System.out.print("Select payment method (D for Debit Card/G for Google Pay): ");
                     String paymentMethod = scanner.next().toUpperCase(); // Convert to uppercase for case-insensitive comparison
                     int asciiValue = (int) paymentMethod.charAt(0); // Convert first character to ASCII
@@ -250,7 +249,6 @@ public class PizzaDeliverySystem {
                             System.out.println("Error: Wrong input. Please enter D or G.");
                             break;
                     }
-                    //}
             } else if (payOption.equalsIgnoreCase("N")) {
                 order.setPayOnline(false);
                 System.out.println("Please pay in person upon delivery.");
